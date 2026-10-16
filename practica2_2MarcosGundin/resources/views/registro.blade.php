@@ -16,28 +16,28 @@
         <div class="card-body p-4">
           @if($errors->any())
             <p style="color:red">{{ $errors->first() }}</p>
-            @endif
+          @endif
 
-        <form method="POST" action="{{ route('registro') }}">
+          <form method="POST" action="{{ route('registro_guardar') }}">
             @csrf
             <div class="mb-3">
               <label for="nombre" class="form-label text-muted">Nombre</label>
-              <input type="text" class="form-control" id="nombre" placeholder="Tu nombre">
+              <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Tu nombre" required>
             </div>
 
             <div class="mb-3">
               <label for="email" class="form-label text-muted">Correo electrónico</label>
-              <input type="email" class="form-control" id="email" placeholder="tucorreo@ejemplo.com">
+              <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="tucorreo@ejemplo.com" required>
             </div>
 
             <div class="mb-3">
               <label for="password" class="form-label text-muted">Contraseña</label>
-              <input type="password" class="form-control" id="password" placeholder="••••••••">
+              <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
             </div>
 
             <div class="mb-4">
-              <label for="password2" class="form-label text-muted">Repetir contraseña</label>
-              <input type="password" class="form-control" id="password2" placeholder="••••••••">
+              <label for="password_confirmation" class="form-label text-muted">Repetir contraseña</label>
+              <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required>
             </div>
 
             <div class="d-grid">

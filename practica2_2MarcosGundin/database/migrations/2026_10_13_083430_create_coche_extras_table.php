@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('coche_extras', function (Blueprint $table) {
-            $table->string('matricula');
+            $table->string('matricula', 7);
             $table->unsignedInteger('id_extra');
 
             // La clave primaria son las dos columnas juntas
             $table->primary(['matricula', 'id_extra']);
 
             // Integridad referencial: si se borra un coche o un extra, se borra la relación
-            $table->foreign('matricula')->references('matricula')->on('tpracticamarcos')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreign('id_extra')->references('id_extra')->on('extras')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreign('matricula')->references('matricula')->on('tpracticamarcos')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_extra')->references('id_extra')->on('extras')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

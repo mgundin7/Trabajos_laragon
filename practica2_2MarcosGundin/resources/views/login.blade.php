@@ -17,20 +17,20 @@
             @if($errors->any())
                 <p style="color:red">{{ $errors->first() }}</p>
             @endif
-          <form method="POST" action="{{ route('login') }}">
+          <form method="POST" action="{{ route('login_autenticar') }}">
             @csrf
             <div class="mb-3">
               <label for="email" class="form-label text-muted">Correo electrónico</label>
-              <input type="email" class="form-control" id="email" placeholder="tucorreo@ejemplo.com">
+              <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="tucorreo@ejemplo.com" required>
             </div>
 
             <div class="mb-3">
               <label for="password" class="form-label text-muted">Contraseña</label>
-              <input type="password" class="form-control" id="password" placeholder="••••••••">
+              <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
             </div>
 
             <div class="form-check mb-4">
-              <input class="form-check-input" type="checkbox" id="recordar">
+              <input class="form-check-input" type="checkbox" id="recordar" name="recordar" value="1">
               <label class="form-check-label text-muted" for="recordar">Recordarme</label>
             </div>
 

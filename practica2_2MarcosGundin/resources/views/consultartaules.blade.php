@@ -4,7 +4,6 @@
 
 @section('contenido')
 <h2>Coches y extras (N:M)</h2>
-<img src="{{ asset('img/eer_nm.png') }}" alt="EER N:M" width="500">
 
 @if(session('ok'))
     <p style="color:green">{{ session('ok') }}</p>

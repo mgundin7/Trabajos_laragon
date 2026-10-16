@@ -24,58 +24,41 @@
         </a>
 
         <div>
-            <a class="text-white me-3" href="/">
-                Inicio
-            </a>
-
-            <a class="text-white me-3" href="/nosaltres">
-                Nosotros
-            </a>
-
-            <a class="text-white me-3" href="/onestem">
-                Dónde estamos
-            </a>
-
-            <a class="text-white me-3" href="/insertar">
-                Insertar
-            </a>
-            
-            <a class="text-white me-3" href="/buscar">
-                Buscar
-            </a>
-
-            <a class="text-white me-3" href="/consultar">
-                Consultar
-            </a>
-
-            <a class="text-white me-3" href="/borrar">
-                Borrar
-            </a>
-
-            <a class="text-white me-3" href="/modificar">
-                Modificar
-            </a>
-<nav>
-        <a href="{{ route('ce.consultar') }}">Consultar coches-extras</a> |
-        <a href="{{ route('ce.insertarForm') }}">Insertar coches-extras</a>
-        @auth
-            | <a href="{{ route('logout') }}">Logout</a>
-        @else
-            | <a href="{{ route('login') }}">Login</a> |
-            <a href="{{ route('registro') }}">Registro</a>
-        @endauth
-    </nav>
-
+            @auth
+                <a class="text-white me-3" href="/">Inicio</a>
+                <a class="text-white me-3" href="/nosaltres">Nosotros</a>
+                <a class="text-white me-3" href="/onestem">Dónde estamos</a>
+                <a class="text-white me-3" href="/insertar">Insertar</a>
+                <a class="text-white me-3" href="/buscar">Buscar</a>
+                <a class="text-white me-3" href="/consultar">Consultar</a>
+                <a class="text-white me-3" href="/borrar">Borrar</a>
+                <a class="text-white me-3" href="/modificar">Modificar</a>
+                <a class="text-white me-3" href="{{ route('ce.consultar') }}">Consultar coches-extras</a>
+                <a class="text-white me-3" href="{{ route('ce.insertarForm') }}">Insertar coches-extras</a>
+                <a class="text-white" href="{{ route('logout') }}">Logout</a>
+            @else
+                <a class="text-white me-3" href="{{ route('login') }}">Login</a>
+                <a class="text-white" href="{{ route('registro') }}">Registro</a>
+            @endauth
         </div>
 
     </div>
 </nav>
 
 <main class="flex-grow-1">
+    @if (session('despedida'))
+    <div class="container mt-3">
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ session('despedida') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    </div>
+    @endif
+    
     @yield('contenido')
+
+
 </main>
-
-
 
 <footer class="bg-dark text-white text-center p-3 mt-5">
     AutoCars - Concesionario de coches

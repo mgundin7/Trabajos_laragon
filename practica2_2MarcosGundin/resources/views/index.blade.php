@@ -8,7 +8,7 @@
 
     <div class="text-center">
 
-        <h1>🚗 Bienvenidos a AutoCars</h1>
+        <h1>🚗 Bienvenidos a AutoCars, {{ auth()->user()->name }}</h1>
 
         <p class="lead">
             Tu concesionario de coches de confianza
