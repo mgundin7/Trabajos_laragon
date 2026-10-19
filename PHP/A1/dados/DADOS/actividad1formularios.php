@@ -3,20 +3,19 @@ $formularioEnviado = isset($_POST['calcular']);
 if ($formularioEnviado) {
     $precioTotal = 0;
     $numeroemails = 0;
-    if (is_int($_POST['numeroemails'])) {
+    if (is_numeric($_POST['numeroemails'])) {
         $numeroemails = $_POST['numeroemails'];
+        $seguro = $_POST['seguro'] ?? 0;
     } else {
         echo "Valor no numerico";
     }
-    $seguro = $_POST['seguro'];
-
     if ($numeroemails > 0 && $numeroemails <= 2000) {
         $precioTotal = 0;
 
     } elseif ($numeroemails >= 2001 && $numeroemails <= 10000) {
         $precioTotal = $numeroemails * 0.7;
 
-    } elseif ($numeroemails >= 100001) {
+    } elseif ($numeroemails >= 10001) {
         $precioTotal = $numeroemails * 0.2;
     }
 
@@ -79,7 +78,7 @@ if ($formularioEnviado) {
         <input type="number" name="numeroemails" min="1" max="1000000"><br>
         <input type="checkbox" name="seguro" value="1">
         <label for="seguro">Quiero el seguro por 0.1€</label><br>
-        <input type="submit" value="calcular">
+        <input type="submit" name="calcular" value="calcular">
     </form>
     <?php if ($formularioEnviado): ?>
     <h3>Total de precio: <?= $precioTotal?></h3>
