@@ -27,6 +27,8 @@ class tpracticamarcosFactory extends Factory
             $letras[random_int(0, strlen($letras) - 1)] .
             $letras[random_int(0, strlen($letras) - 1)];
 
+            //$letras[rand(0,strlen($letras) - 1)]
+
         return [
             'matricula' => $matricula,
 

@@ -95,7 +95,7 @@ public function f_buscar (Request $request)
  
  
         $fila = tpracticamarcos::query();    
-        $fila->where('matricula','like',"%$matricula%");  //tots els noms que contidran la paraula nom
+        $fila->where('matricula','like',"$matricula");  //tots els noms que contidran la paraula nom
         //$fila->where('nom','like',"$nombre");  //tots els noms que coincideixen amb la paraula nom
  
         $fila->orderBy('matricula', 'desc'); //ordenar descendenment, asc o res per ascedentment
@@ -118,7 +118,7 @@ public function f_buscar (Request $request)
     public function f_borrarfila(string $matricula)
     {
         $fila = tpracticamarcos::query();    
-        $fila->where('matricula','like',"%$matricula%");        
+        $fila->where('matricula','like',"$matricula");        
         $fila->delete();
         return redirect()->route('dades-borrar')->with('success','eliminat correctament');      
     }   
