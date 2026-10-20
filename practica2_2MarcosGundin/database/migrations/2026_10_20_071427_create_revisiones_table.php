@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('revisiones', function (Blueprint $table) {
-            $table->integer(id)->unique()->primary()
-            
+            $table->id();
+            $table->string('matricula', 7);
+            $table->date('fecha');
+            $table->string('descripcion');
+            $table->decimal('precio', 9, 2)->default(0);
+
+            $table->foreign('matricula')->references('matricula')->on('tpracticamarcos')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
