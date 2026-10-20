@@ -3,29 +3,43 @@
 @section('titulo', 'insertarextras')
 
 @section('contenido')
-<h2>Asignar extra a un coche</h2>
+<div class="container py-4">
 
-@if($errors->any())
-    <p style="color:red">{{ $errors->first() }}</p>
-@endif
+    <h2 class="h4 mb-3">Asignar extra a un coche</h2>
 
-<form method="POST" action="{{ route('ce.insertar') }}">
-    @csrf
+    @if($errors->any())
+        <div class="alert alert-danger">{{ $errors->first() }}</div>
+    @endif
 
-    <label>Coche:</label>
-    <select name="matricula">
-        @foreach($coches as $c)
-            <option value="{{ $c->matricula }}">{{ $c->matricula }} - {{ $c->marca }} {{ $c->modelo }}</option>
-        @endforeach
-    </select>
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ route('ce.insertar') }}">
+                @csrf
 
-    <label>Extra:</label>
-    <select name="id_extra">
-        @foreach($extras as $e)
-            <option value="{{ $e->id_extra }}">{{ $e->nombre }}</option>
-        @endforeach
-    </select>
+                <div class="mb-3">
+                    <label for="matricula" class="form-label">Coche</label>
+                    <select name="matricula" id="matricula" class="form-select">
+                        @foreach($coches as $c)
+                            <option value="{{ $c->matricula }}">
+                                {{ $c->matricula }} - {{ $c->marca }} {{ $c->modelo }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-    <button type="submit">Guardar</button>
-</form>
+                <div class="mb-3">
+                    <label for="id_extra" class="form-label">Extra</label>
+                    <select name="id_extra" id="id_extra" class="form-select">
+                        @foreach($extras as $e)
+                            <option value="{{ $e->id_extra }}">{{ $e->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-dark">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+</div>
 @endsection

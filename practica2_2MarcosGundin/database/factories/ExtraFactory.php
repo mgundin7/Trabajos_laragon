@@ -18,7 +18,7 @@ class ExtraFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => fake()->unique()->randomElement([
+            'nombre' => fake()->randomElement([
                 'Aire acondicionado', 'GPS', 'Techo solar', 'Cámara trasera',
                 'Asientos de cuero', 'Sensores de aparcamiento',
                 'Llantas de aleación', 'Control de crucero',

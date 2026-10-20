@@ -25,20 +25,20 @@
 
         <div>
             @auth
-                <a class="text-white me-3" href="/">Inicio</a>
-                <a class="text-white me-3" href="/nosaltres">Nosotros</a>
-                <a class="text-white me-3" href="/onestem">Dónde estamos</a>
-                <a class="text-white me-3" href="/insertar">Insertar</a>
-                <a class="text-white me-3" href="/buscar">Buscar</a>
-                <a class="text-white me-3" href="/consultar">Consultar</a>
-                <a class="text-white me-3" href="/borrar">Borrar</a>
-                <a class="text-white me-3" href="/modificar">Modificar</a>
-                <a class="text-white me-3" href="{{ route('ce.consultar') }}">Consultar coches-extras</a>
-                <a class="text-white me-3" href="{{ route('ce.insertarForm') }}">Insertar coches-extras</a>
-                <a class="text-white" href="{{ route('logout') }}">Logout</a>
+                <a class="text-white me-3 text-decoration-none" href="/">Inicio</a>
+                <a class="text-white me-3 text-decoration-none" href="/nosaltres">Nosotros</a>
+                <a class="text-white me-3 text-decoration-none" href="/onestem">Dónde estamos</a>
+                <a class="text-white me-3 text-decoration-none" href="/insertar">Insertar</a>
+                <a class="text-white me-3 text-decoration-none" href="/buscar">Buscar</a>
+                <a class="text-white me-3 text-decoration-none" href="/consultar">Consultar</a>
+                <a class="text-white me-3 text-decoration-none" href="/borrar">Borrar</a>
+                <a class="text-white me-3 text-decoration-none" href="/modificar">Modificar</a>
+                <a class="text-white me-3 text-decoration-none" href="{{ route('ce.consultar') }}">Consultar coches-extras</a>
+                <a class="text-white me-3 text-decoration-none" href="{{ route('ce.insertarForm') }}">Insertar coches-extras</a>
+                <a class="text-white text-decoration-none" href="{{ route('logout') }}">Logout</a>
             @else
-                <a class="text-white me-3" href="{{ route('login') }}">Login</a>
-                <a class="text-white" href="{{ route('registro') }}">Registro</a>
+                <a class="text-white me-3 text-decoration-none" href="{{ route('login') }}">Login</a>
+                <a class="text-white text-decoration-none" href="{{ route('registro') }}">Registro</a>
             @endauth
         </div>
 

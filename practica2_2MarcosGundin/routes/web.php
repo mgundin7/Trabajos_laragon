@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CocheExtraController;
 
-// ---------- Solo para NO logueados: login y registro ----------
 Route::middleware("guest")->group(function ()
 {
     Route::get('/login', [AuthController::class, 'f_index'])->name('login');
@@ -14,7 +13,6 @@ Route::middleware("guest")->group(function ()
     Route::post('/registro', [AuthController::class, 'f_registro_guardar'])->name('registro_guardar');
 });
 
-// ---------- Solo para logueados: todo lo demás ----------
 Route::middleware("auth")->group(function ()
 {
     Route::get('/', function () {return view("index");});
