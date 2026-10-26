@@ -31,6 +31,31 @@
                 <h2>4. Historial de tiradas</h2>
                 <p>Bucle while + arrays</p>
             </a>
+
+            <a href="ejercicio4_nuevo.php" class="tarjeta">
+                <h2>5. Historial de tiradas</h2>
+                <p>Bucle while + arrays</p>
+            </a>
+
+            <a href="ejercicio4_nuevo.php" class="tarjeta">
+                <h2>6. Historial de tiradas</h2>
+                <p>Bucle while + arrays</p>
+            </a>
+
+            <a href="ejercicio4_nuevo.php" class="tarjeta">
+                <h2>7. Historial de tiradas</h2>
+                <p>Bucle while + arrays</p>
+            </a>
+
+            <a href="ejercicio4_nuevo.php" class="tarjeta">
+                <h2>8. Historial de tiradas</h2>
+                <p>Bucle while + arrays</p>
+            </a>
+
+            <a href="ejercicio4_nuevo.php" class="tarjeta">
+                <h2>9. Historial de tiradas</h2>
+                <p>Bucle while + arrays</p>
+            </a>
         </div>
     </main>
 </body>

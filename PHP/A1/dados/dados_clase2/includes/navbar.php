@@ -9,6 +9,11 @@ $paginas = [
     'ejercicio2.php' => '2️⃣ Dado con mensajes',
     'ejercicio3.php' => '3️⃣ Dado doble',
     'ejercicio4_nuevo.php' => '4️⃣ Historial',
+    'ejercicio5.php' => '5',
+    'ejercicio6.php' => '6',
+    'ejercicio7.php' => '7',
+    'ejercicio8.php' => '8',
+    'ejercicio9.php' => '9',
 ];
 
 function esActiva($pagina, $actual) {
