@@ -7,7 +7,12 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4 mb-0">Coches y extras</h2>
-        <span class="text-muted">{{ count($relaciones) }} registros</span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-muted">{{ count($relaciones) }} registros</span>
+            @if(auth()->user()->esAdmin())
+                <a href="{{ route('ce.insertarForm') }}" class="btn btn-dark">+ Añadir</a>
+            @endif
+        </div>
     </div>
 
     @if(session('ok'))

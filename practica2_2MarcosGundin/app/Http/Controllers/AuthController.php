@@ -35,7 +35,7 @@ class AuthController extends Controller
         $usuario = User::create($data);
 
         Auth::login($usuario);
-        return redirect()->route('ce.consultar');
+        return redirect('/');
     }
 
     // Comprueba email y contraseña
@@ -48,7 +48,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($datos, $request->boolean('recordar'))) {
             $request->session()->regenerate();
-            return redirect()->route('ce.consultar');
+            return redirect('/');
         }
 
         return back()->withErrors(['email' => 'Email o contraseña incorrectos']);

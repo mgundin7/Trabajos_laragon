@@ -14,4 +14,17 @@ class revisiones extends Model
     protected $keyType = 'int';
     public $timestamps = false;
     protected $fillable = ['matricula', 'fecha', 'descripcion', 'precio'];
+
+    protected function casts(): array
+    {
+        return [
+            'fecha' => 'date',
+        ];
+    }
+
+    // Coche al que pertenece la revisión
+    public function coche()
+    {
+        return $this->belongsTo(tpracticamarcos::class, 'matricula', 'matricula');
+    }
 }

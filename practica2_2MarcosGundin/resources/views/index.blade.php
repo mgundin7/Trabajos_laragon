@@ -8,12 +8,18 @@
 
     <div class="text-center">
 
-        <h1>🚗 Bienvenidos a AutoCars, {{ auth()->user()->name }}</h1>
+        <h1>🚗 Bienvenidos a AutoCars</h1>
+
+        <h4 class="mt-3">
+            Hola, {{ auth()->user()->name }}
+            <span class="badge {{ auth()->user()->esAdmin() ? 'bg-danger' : 'bg-secondary' }} ms-2">
+                {{ auth()->user()->rol }}
+            </span>
+        </h4>
 
         <p class="lead">
             Tu concesionario de coches de confianza
         </p>
-
         <img
             src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80"
             class="img-fluid rounded"

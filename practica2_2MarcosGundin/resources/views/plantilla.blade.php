@@ -25,18 +25,26 @@
 
         <div>
             @auth
+                {{-- Links para cualquier usuario logado --}}
                 <a class="text-white me-3 text-decoration-none" href="/">Inicio</a>
                 <a class="text-white me-3 text-decoration-none" href="/nosaltres">Nosotros</a>
                 <a class="text-white me-3 text-decoration-none" href="/onestem">Dónde estamos</a>
-                <a class="text-white me-3 text-decoration-none" href="/insertar">Insertar</a>
                 <a class="text-white me-3 text-decoration-none" href="/buscar">Buscar</a>
                 <a class="text-white me-3 text-decoration-none" href="/consultar">Consultar</a>
-                <a class="text-white me-3 text-decoration-none" href="/borrar">Borrar</a>
-                <a class="text-white me-3 text-decoration-none" href="/modificar">Modificar</a>
                 <a class="text-white me-3 text-decoration-none" href="{{ route('ce.consultar') }}">Consultar coches-extras</a>
-                <a class="text-white me-3 text-decoration-none" href="{{ route('ce.insertarForm') }}">Insertar coches-extras</a>
+                <a class="text-white me-3 text-decoration-none" href="{{ route('revisiones.consultar') }}">Consultar revisiones</a>
+
+                {{-- Links del CRUD: solo admin --}}
+                @if(auth()->user()->esAdmin())
+                    <a class="text-warning me-3 text-decoration-none" href="/insertar">Insertar</a>
+                    <a class="text-warning me-3 text-decoration-none" href="/borrar">Borrar</a>
+                    <a class="text-warning me-3 text-decoration-none" href="/modificar">Modificar</a>
+                    <a class="text-warning me-3 text-decoration-none" href="{{ route('usuarios.index') }}">Usuarios</a>
+                @endif
+
                 <a class="text-white text-decoration-none" href="{{ route('logout') }}">Logout</a>
             @else
+                {{-- Links para los NO logados --}}
                 <a class="text-white me-3 text-decoration-none" href="{{ route('login') }}">Login</a>
                 <a class="text-white text-decoration-none" href="{{ route('registro') }}">Registro</a>
             @endauth
