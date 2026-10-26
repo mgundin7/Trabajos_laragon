@@ -15,18 +15,18 @@ class ExtraSeeder extends Seeder
     public function run(): void
     {
         Extra::query()->delete();
-        // $extras = Extra::factory(8)->create();
+        $extras = Extra::factory(8)->create();
 
-        // $matriculas = DB::table('tpracticamarcos')->pluck('matricula');
+        $matriculas = DB::table('tpracticamarcos')->pluck('matricula');
 
-        // foreach ($extras as $extra) {
-        //     foreach ($matriculas->take(3) as $matricula) {
-        //         DB::table('coche_extras')->insert([
-        //             'matricula' => $matricula,
-        //             'id_extra'  => $extra->id_extra,
-        //         ]);
-        // }
-        // }
+        foreach ($extras as $extra) {
+            foreach ($matriculas->take(3) as $matricula) {
+                DB::table('coche_extras')->insert([
+                    'matricula' => $matricula,
+                    'id_extra'  => $extra->id_extra,
+                ]);
+        }
+        }
         Extra::factory(50)->create();
     }
 }

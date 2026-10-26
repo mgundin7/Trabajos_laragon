@@ -19,9 +19,9 @@ class revisionesFactory extends Factory
     public function definition(): array
     {
         return [
-            'matricula' => tpracticamarcos::inRandomOrder()->first()->plate,
+            'matricula' => tpracticamarcos::inRandomOrder()->first()->matricula,
             'fecha' => fake()->dateTimeBetween('1990-01-01', '2026-12-31')->format('Y-m-d'),
-            'descripcion' => fake()->randomElement([
+            'descripcion' => fake()->randomElement(
                 [
                     'Cambio de aceite y filtro',
                     'Cambio de filtro de aire',
@@ -44,7 +44,7 @@ class revisionesFactory extends Factory
                     'Reparación del alternador',
                     'Cambio de embrague',
                 ]
-            ]),
+            ),
             'precio' => fake()->randomFloat(2, 100, 2500),
         ];
     }
