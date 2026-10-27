@@ -1,3 +1,4 @@
+<?php
 namespace App\Http\Controllers;
  
 use App\Models\User; // <- nou
@@ -66,3 +67,4 @@ class AuthController extends Controller
         ]);
     }
 }
+?>
