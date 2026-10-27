@@ -32,30 +32,16 @@
                 <p>Bucle while + arrays</p>
             </a>
 
-            <a href="ejercicio4_nuevo.php" class="tarjeta">
-                <h2>5. Historial de tiradas</h2>
-                <p>Bucle while + arrays</p>
+            <a href="ejercicio5.php" class="tarjeta">
+                <h2>5. Diccionario de dados</h2>
+                <p>Crear i acceder a arrays asociativos</p>
             </a>
 
-            <a href="ejercicio4_nuevo.php" class="tarjeta">
-                <h2>6. Historial de tiradas</h2>
-                <p>Bucle while + arrays</p>
+            <a href="ejercicio6.php" class="tarjeta">
+                <h2>6. Marcador de jugadores</h2>
+                <p>recorrer con clave => valor</p>
             </a>
 
-            <a href="ejercicio4_nuevo.php" class="tarjeta">
-                <h2>7. Historial de tiradas</h2>
-                <p>Bucle while + arrays</p>
-            </a>
-
-            <a href="ejercicio4_nuevo.php" class="tarjeta">
-                <h2>8. Historial de tiradas</h2>
-                <p>Bucle while + arrays</p>
-            </a>
-
-            <a href="ejercicio4_nuevo.php" class="tarjeta">
-                <h2>9. Historial de tiradas</h2>
-                <p>Bucle while + arrays</p>
-            </a>
         </div>
     </main>
 </body>

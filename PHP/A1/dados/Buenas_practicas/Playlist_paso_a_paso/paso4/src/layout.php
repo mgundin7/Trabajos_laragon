@@ -12,7 +12,7 @@ function renderHeader(string $title): void
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title) ?> | Mi playlist</title>
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20261026-2">
+    <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
     <header>
@@ -20,6 +20,7 @@ function renderHeader(string $title): void
             <ul>
                 <li><a href="index.php">Inicio</a></li>
                 <li><a href="sobre.php">Sobre mí</a></li>
+                <li><a href="contacto.php">Contacta</a></li>
             </ul>
         </nav>
     </header>
