@@ -1,4 +1,5 @@
 <?php 
+require 'includes/navbar.php';
 $caras = [
 1 => [
         'nombre'  => 'Uno',
@@ -38,7 +39,7 @@ $caras = [
     echo "<img src='" . $caras[$tirada]['imagen'] . "' alt='Cara " . $tirada . "'> . <br>";
     echo "Mensaje: " . $caras[$tirada]['mensaje'] . "<br>";
 ?>
-
+<link rel="stylesheet" href="css/estilos.css">
 <table border="1" cellpadding="8" style="border-collapse: collapse; text-align: left;">
     <thead>
         <tr style="background-color: #f2f2f2;">

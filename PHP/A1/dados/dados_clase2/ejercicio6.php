@@ -1,5 +1,6 @@
 
 <?php
+require 'includes/navbar.php';
 $marcador = ['Ana' => 0, 'Luis' => 0, 'Marta' => 0];
 
 $historial = [
@@ -28,9 +29,9 @@ $medallas = ['1º', '2º', '3º'];
 <head>
     <meta charset="UTF-8">
     <title>Marcador de jugadores</title>
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-
     <h1>Historial de tiradas</h1>
 
     <?php foreach ($historial as $jugador => $tiradas) { ?>
