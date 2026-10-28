@@ -10,4 +10,10 @@
         }
         return $html . '</ul>';
     }
+
+    //Funcion que devuelve el html del formulario de contacto
+    function renderContactForm(array $datos, string $csrf): string
+    {
+        return "";
+    }
 ?>
