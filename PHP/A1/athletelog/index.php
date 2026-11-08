@@ -7,12 +7,13 @@ renderHeader('Inicio');
 
 renderNavbar('Navbar');
 
+// Se separan los deportes en dos arrays segun su categoria para pintar una tabla de cada tipo.
 $individuales = getSportsByCategory($sports, 'individual');
 $equipos = getSportsByCategory($sports, 'equipo');
 ?>
 
 <main>
-    <h1>Bienvenido a <?= pageTitle ?></h1>
+    <h1>Bienvenido a <?= e(pageTitle) ?></h1>
 
     <p>Esta pagina esta destinada a incrementar tu rendimiento deportivo mediante un seguimiento de entrenamientos.</p>
 

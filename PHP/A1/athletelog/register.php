@@ -1,179 +1,177 @@
 <?php
-declare(strict_types=1);
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
-require_once __DIR__ . '/includes/bootstrap.php';
+    declare(strict_types = 1);
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
+    require_once __DIR__ . '/includes/bootstrap.php';
 
-const NAME_MIN     = 3;
-const NAME_MAX     = 50;
-const USERNAME_MIN = 4;
-const USERNAME_MAX = 15;
-const PASSWORD_MIN = 8;
-const AGE_MIN      = 16;
-const AGE_MAX      = 60;
-
-function fieldError(array $errors, string $field): string
-{
-    return isset($errors[$field])
-        ? '<span class="field-error" role="alert">' . e($errors[$field]) . '</span>'
-        : '';
-}
-
-
-if (empty($_SESSION['csrf'])) {
-    $_SESSION['csrf'] = bin2hex(random_bytes(32));
-}
-
-$name     = '';
-$username = '';
-$email    = '';
-$age      = '';
-$sport    = '';
-$level    = '';
-$days     = [];
-$privacy  = false;
-$errors   = [];      // clave = nombre del campo, valor = mensaje
-$success  = false;
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 1. Validar token CSRF
-    $token = $_POST['csrf'] ?? '';
-    if (!is_string($token) || !hash_equals($_SESSION['csrf'], $token)) {
-        http_response_code(403);
-        exit('Solicitud no válida.');
+    // Se inicia la sesion solo si no estaba iniciada ya, porque el token csrf se guarda en $_SESSION.
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
     }
 
-    // 2. Recoger y sanear los datos (siempre comprobando el tipo)
-    $nameRaw     = $_POST['name'] ?? '';
-    $usernameRaw = $_POST['username'] ?? '';
-    $emailRaw    = $_POST['email'] ?? '';
-    $password    = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
-    $passwordRep = is_string($_POST['password_repeat'] ?? null) ? $_POST['password_repeat'] : '';
-    $ageRaw      = $_POST['age'] ?? '';
-    $sportRaw    = $_POST['sport'] ?? '';
-    $levelRaw    = $_POST['level'] ?? '';
-    $daysRaw     = $_POST['days'] ?? [];
+    // Token CSRF: se crea una sola vez por sesion y se mete en un campo oculto del formulario.
+    // Cuando se envia se comprueba que coincida, asi nos aseguramos de que el POST viene de
+    // nuestro formulario y no de otra web.
+    if (empty($_SESSION['csrf'])) {
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
+    }
 
-    $name     = is_string($nameRaw) ? trim($nameRaw) : '';
-    $username = is_string($usernameRaw) ? trim($usernameRaw) : '';
-    $email    = is_string($emailRaw) ? trim($emailRaw) : '';
-    $age      = is_string($ageRaw) ? trim($ageRaw) : '';
-    $sport    = is_string($sportRaw) ? $sportRaw : '';
-    $level    = is_string($levelRaw) ? $levelRaw : '';
-    $privacy  = isset($_POST['privacy']) && $_POST['privacy'] === '1';
+    // Variables que se usan en el formulario. Empiezan vacias para que la primera vez que
+    // se entra a la pagina el formulario salga en blanco. $errores guarda todos los mensajes
+    // de error y $exito pasa a true solo si todo esta bien.
+    $nombre = '';
+    $usuario = '';
+    $email = '';
+    $edad = '';
+    $deporte = '';
+    $nivel = '';
+    $diasMarcados = [];
+    $privacidad = false;
+    $errores = [];
+    $exito = false;
 
-    // Solo se aceptan días que existan en DAYS
-    $days = is_array($daysRaw)
-        ? array_values(array_intersect(array_keys($days), array_filter($daysRaw, 'is_string')))
+    // Todo el procesado solo se hace si se ha enviado el formulario (peticion POST). Si solo
+    // se entra a la pagina (GET) se pinta el formulario vacio.
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $token = $_POST['csrf'] ?? '';
+        if (!is_string($token) || !hash_equals($_SESSION['csrf'], $token)) {
+            http_response_code(403);
+            exit('Solicitud no valida.');
+        }
+
+        // Se recoge cada campo de $_POST. Con is_string se comprueba que lo recibido sea texto
+        // y no un array manipulado, y con trim se quitan los espacios de los lados. A las
+        // contraseñas no se les hace trim porque los espacios podrian formar parte de ellas.
+        $nombreRaw = $_POST['nombre'] ?? '';
+        $nombre = is_string($nombreRaw) ? trim($nombreRaw) : '';
+
+        $usuarioRaw = $_POST['usuario'] ?? '';
+        $usuario = is_string($usuarioRaw) ? trim($usuarioRaw) : '';
+
+        $emailRaw = $_POST['email'] ?? '';
+        $email = is_string($emailRaw) ? trim($emailRaw) : '';
+
+        $passRaw = $_POST['password'] ?? '';
+        $password = is_string($passRaw) ? $passRaw : '';
+
+        $pass2Raw = $_POST['password2'] ?? '';
+        $password2 = is_string($pass2Raw) ? $pass2Raw : '';
+
+        $edadRaw = $_POST['edad'] ?? '';
+        $edad = is_string($edadRaw) ? trim($edadRaw) : '';
+
+        $deporteRaw = $_POST['deporte'] ?? '';
+        $deporte = is_string($deporteRaw) ? $deporteRaw : '';
+
+        $nivelRaw = $_POST['nivel'] ?? '';
+        $nivel = is_string($nivelRaw) ? $nivelRaw : '';
+
+        // De los dias marcados solo se dejan los que existen en el array $days, asi nadie
+        // puede enviar dias inventados. array_values reordena los indices del resultado.
+        $diasRaw = $_POST['dias'] ?? [];
+        $diasMarcados = is_array($diasRaw)
+
+        ? array_values(array_intersect(array_keys($days), array_filter($diasRaw, 'is_string')))
         : [];
 
-    // 3. Validaciones
-    if ($name === '') {
-        $errors['name'] = 'El nombre es obligatorio.';
-    } elseif (mb_strlen($name) < NAME_MIN || mb_strlen($name) > NAME_MAX) {
-        $errors['name'] = 'El nombre debe tener entre ' . NAME_MIN . ' y ' . NAME_MAX . ' caracteres.';
+        $privacidad = isset($_POST['privacidad']);
+
+        // Validaciones. Cada fallo se añade al array $errores para poder mostrar todos los
+        // errores a la vez en la lista de arriba.
+        if ($nombre === '') {
+            $errores[] = 'El nombre es obligatorio.';
+        } elseif (mb_strlen($nombre) < NOMBRE_MIN || mb_strlen($nombre) > NOMBRE_MAX) {
+            $errores[] = 'El nombre debe tener entre ' . NOMBRE_MIN . ' y ' . NOMBRE_MAX . ' caracteres.';
+        }
+
+        if ($usuario === '') {
+            $errores[] = 'El usuario es obligatorio.';
+        } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $usuario)) {
+            $errores[] = 'El usuario solo puede contener letras, números y _.';
+        } elseif (mb_strlen($usuario) < USUARIO_MIN || mb_strlen($usuario) > USUARIO_MAX) {
+            $errores[] = 'El usuario debe tener entre ' . USUARIO_MIN . ' y ' . USUARIO_MAX . ' caracteres.';
+        }
+
+        if ($email === '') {
+            $errores[] = 'El email es obligatorio.';
+        } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            $errores[] = 'El email no tiene un formato válido.';
+        }
+
+        if ($password === '') {
+            $errores[] = 'La contraseña es obligatoria.';
+        } elseif (mb_strlen($password) < CONTRASENA_MIN) {
+            $errores[] = 'La contraseña debe tener al menos ' . CONTRASENA_MIN . ' caracteres.';
+        } elseif ($password !== $password2) {
+            $errores[] = 'Las contraseñas no coinciden.';
+        }
+
+        // filter_var con FILTER_VALIDATE_INT comprueba que la edad sea un numero entero dentro
+        // del rango permitido. Si no lo es devuelve false.
+        $edadNumero = filter_var($edad, FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => EDAD_MIN, 'max_range' => EDAD_MAX],
+        ]);
+        if ($edadNumero === false) {
+            $errores[] = 'La edad debe ser un número entre ' . EDAD_MIN . ' y ' . EDAD_MAX . '.';
+        }
+
+        // El deporte y el nivel tienen que existir como clave en sus arrays, si no, alguien
+        // podria haber cambiado el valor del select o del radio desde el navegador.
+        if (!array_key_exists($deporte, $sports)) {
+            $errores[] = 'Debes seleccionar un deporte válido.';
+        }
+        if (!array_key_exists($nivel, $levels)) {
+            $errores[] = 'Debes seleccionar un nivel competitivo.';
+        }
+
+        if ($diasMarcados === []) {
+            $errores[] = 'Debes marcar al menos un día de entrenamiento.';
+        }
+
+        if (!$privacidad) {
+            $errores[] = 'Debes aceptar el tratamiento de tus datos.';
+        }
+
+        // Si no hay ningun error el registro es correcto. La contraseña nunca se guarda en
+        // texto plano: password_hash crea un hash con sal que mas adelante se comprobara en el
+        // login con password_verify. Por ahora no se guarda en ningun sitio.
+        if ($errores === []) {
+            $contrasenaHash = password_hash($password, PASSWORD_DEFAULT);
+            $exito = true;
+        }
     }
 
-    if ($username === '') {
-        $errors['username'] = 'El usuario es obligatorio.';
-    } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-        $errors['username'] = 'El usuario solo puede contener letras, números y _.';
-    } elseif (mb_strlen($username) < USERNAME_MIN || mb_strlen($username) > USERNAME_MAX) {
-        $errors['username'] = 'El usuario debe tener entre ' . USERNAME_MIN . ' y ' . USERNAME_MAX . ' caracteres.';
-    }
-
-    if ($email === '') {
-        $errors['email'] = 'El email es obligatorio.';
-    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-        $errors['email'] = 'El email no tiene un formato válido.';
-    }
-
-    if ($password === '') {
-        $errors['password'] = 'La contraseña es obligatoria.';
-    } elseif (mb_strlen($password) < PASSWORD_MIN) {
-        $errors['password'] = 'La contraseña debe tener al menos ' . PASSWORD_MIN . ' caracteres.';
-    } elseif ($password !== $passwordRep) {
-        $errors['password_repeat'] = 'Las contraseñas no coinciden.';
-    }
-
-    $ageInt = filter_var($age, FILTER_VALIDATE_INT, [
-        'options' => ['min_range' => AGE_MIN, 'max_range' => AGE_MAX],
-    ]);
-    if ($ageInt === false) {
-        $errors['age'] = 'La edad debe ser un número entre ' . AGE_MIN . ' y ' . AGE_MAX . '.';
-    }
-
-    if (!array_key_exists($sport, $sports)) {
-        $errors['sport'] = 'Debes seleccionar un deporte válido.';
-    }
-
-    if (!array_key_exists($level, $levels)) {
-        $errors['level'] = 'Debes seleccionar un nivel competitivo.';
-    }
-
-    if ($days === []) {
-        $errors['days'] = 'Debes marcar al menos un día de entrenamiento.';
-    }
-
-    if (!$privacy) {
-        $errors['privacy'] = 'Debes aceptar el tratamiento de tus datos.';
-    }
-
-    if ($errors === []) {
-        $success = true; // Aún no se guarda en ningún sitio
-    }
-}
-
-renderHeader('Registro');
-renderNavbar('Navbar');
+    // Se pintan la cabecera y el menu con las funciones de la carpeta includes.
+    renderHeader('Registro');
+    renderNavbar('Navbar');
 ?>
 
-<style>
-    .error-list {
-        background: #fdecea;
-        border: 1px solid #d93025;
-        border-left: 6px solid #d93025;
-        color: #8a1c14;
-        padding: 12px 12px 12px 32px;
-        margin-bottom: 20px;
-    }
-    .field-error { display: block; color: #d93025; font-size: 0.9em; margin-top: 4px; }
-    .success { background: #e6f4ea; border: 1px solid #1e8e3e; color: #0d5c25; padding: 12px; }
-    form p { margin: 12px 0; }
-    label { display: inline-block; margin-right: 6px; }
-</style>
-
 <main>
-    <?php if ($success): ?>
-        <div class="success" role="status">
+    <?php if ($exito): ?>
+        <div class="exito">
             <h1>¡Registro correcto!</h1>
             <p>Estos son los datos recibidos:</p>
         </div>
         <ul>
-            <li>Nombre completo: <strong><?= e($name) ?></strong></li>
-            <li>Usuario: <strong><?= e($username) ?></strong></li>
+            <li>Nombre completo: <strong><?= e($nombre) ?></strong></li>
+            <li>Usuario: <strong><?= e($usuario) ?></strong></li>
             <li>Email: <strong><?= e($email) ?></strong></li>
-            <li>Edad: <strong><?= e($age) ?></strong></li>
-            <li>Deporte principal: <strong><?= e($sports[$sport]['name']) ?></strong></li>
-            <li>Nivel competitivo: <strong><?= e($levels[$level]) ?></strong></li>
+            <li>Edad: <strong><?= e($edad) ?></strong></li>
+            <li>Deporte principal: <strong><?= e($sports[$deporte]['name']) ?></strong></li>
+            <li>Nivel competitivo: <strong><?= e($levels[$nivel]) ?></strong></li>
             <li>Días de entrenamiento:
                 <ul>
-                    <?php foreach ($days as $code): ?>
-                        <li><?= e(DAYS[$code]) ?></li>
+                    <?php foreach ($diasMarcados as $codigo): ?>
+                        <li><?= e($days[$codigo]) ?></li>
                     <?php endforeach; ?>
                 </ul>
             </li>
         </ul>
     <?php else: ?>
-        <h1>Date de alta</h1>
+        <h1>Alta de deportista</h1>
 
-        <?php if ($errors !== []): ?>
-            <ul class="error-list" role="alert">
-                <?php foreach ($errors as $error): ?>
+        <?php if ($errores !== []): ?>
+            <ul class="errores">
+                <?php foreach ($errores as $error): ?>
                     <li><?= e($error) ?></li>
                 <?php endforeach; ?>
             </ul>
@@ -183,92 +181,82 @@ renderNavbar('Navbar');
             <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
 
             <p>
-                <label for="name">Nombre completo:</label>
-                <input type="text" id="name" name="name" value="<?= e($name) ?>"
-                       minlength="<?= NAME_MIN ?>" maxlength="<?= NAME_MAX ?>" required>
-                <?= fieldError($errors, 'name') ?>
+                <label for="nombre">Nombre completo: </label>
+                <input type="text" name="nombre" id="nombre"
+                        value="<?= e($nombre) ?>"
+                        maxlength="<?= NOMBRE_MAX ?>" required>
             </p>
 
             <p>
-                <label for="username">Usuario:</label>
-                <input type="text" id="username" name="username" value="<?= e($username) ?>"
-                       minlength="<?= USERNAME_MIN ?>" maxlength="<?= USERNAME_MAX ?>"
-                       pattern="[a-zA-Z0-9_]+" required>
-                <?= fieldError($errors, 'username') ?>
+                <label for="usuario">Usuario: </label>
+                <input type="text" name="usuario" id="usuario"
+                        value="<?= e($usuario) ?>"
+                        maxlength="<?= USUARIO_MAX ?>" required>
             </p>
 
             <p>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<?= e($email) ?>" required>
-                <?= fieldError($errors, 'email') ?>
+                <label for="email">Email: </label>
+                <input type="email" name="email" id="email"
+                        value="<?= e($email) ?>" required>
             </p>
 
             <p>
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password"
-                       minlength="<?= PASSWORD_MIN ?>" required>
-                <?= fieldError($errors, 'password') ?>
+                <label for="password">Contraseña: </label>
+                <input type="password" name="password" id="password" required>
             </p>
 
             <p>
-                <label for="password_repeat">Repetir contraseña:</label>
-                <input type="password" id="password_repeat" name="password_repeat"
-                       minlength="<?= PASSWORD_MIN ?>" required>
-                <?= fieldError($errors, 'password_repeat') ?>
+                <label for="password2">Repetir contraseña: </label>
+                <input type="password" name="password2" id="password2" required>
             </p>
 
             <p>
-                <label for="age">Edad:</label>
-                <input type="number" id="age" name="age" value="<?= e($age) ?>"
-                       min="<?= AGE_MIN ?>" max="<?= AGE_MAX ?>" required>
-                <?= fieldError($errors, 'age') ?>
+                <label for="edad">Edad: </label>
+                <input type="number" name="edad" id="edad"
+                        value="<?= e($edad) ?>"
+                        min="<?= EDAD_MIN ?>" max="<?= EDAD_MAX ?>" required>
             </p>
 
             <p>
-                <label for="sport">Deporte principal:</label>
-                <select id="sport" name="sport" required>
+                <label for="deporte">Deporte principal: </label>
+                <select name="deporte" id="deporte" required>
                     <option value="">Selecciona un deporte</option>
-                    <?php foreach ($sports as $key => $s): ?>
-                        <option value="<?= e((string) $key) ?>"
-                            <?= $sport === (string) $key ? 'selected' : '' ?>>
-                            <?= e($s['name']) ?>
+                    <?php foreach ($sports as $clave => $datos): ?>
+                        <option value="<?= e($clave) ?>" <?= $deporte === $clave ? 'selected' : '' ?>>
+                            <?= e($datos['name']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <?= fieldError($errors, 'sport') ?>
             </p>
 
             <fieldset>
                 <legend>Nivel competitivo</legend>
-                <?php foreach ($levels as $key => $label): ?>
+                <?php foreach ($levels as $clave => $etiqueta): ?>
                     <p>
-                        <input type="radio" name="level"
-                               id="level_<?= e((string) $key) ?>" value="<?= e((string) $key) ?>"
-                               <?= $level === (string) $key ? 'checked' : '' ?>>
-                        <label for="level_<?= e((string) $key) ?>"><?= e($label) ?></label>
+                        <input type="radio" name="nivel"
+                            id="nivel_<?= e($clave) ?>" value="<?= e($clave) ?>"
+                            <?= $nivel === $clave ? 'checked' : '' ?>>
+                        <label for="nivel_<?= e($clave) ?>"><?= e($etiqueta) ?></label>
                     </p>
                 <?php endforeach; ?>
-                <?= fieldError($errors, 'level') ?>
             </fieldset>
 
             <fieldset>
                 <legend>Días de entrenamiento</legend>
-                <?php foreach ($days as $code => $label): ?>
+                <?php foreach ($days as $codigo => $etiqueta): ?>
                     <p>
-                        <input type="checkbox" name="days[]"
-                               id="days_<?= e((string) $code) ?>" value="<?= e((string) $code) ?>"
-                               <?= in_array((string) $code, $days, true) ? 'checked' : '' ?>>
-                        <label for="days_<?= e((string) $code) ?>"><?= e($label) ?></label>
+                        <input type="checkbox" name="dias[]"
+                            id="dias_<?= e($codigo) ?>" value="<?= e($codigo) ?>"
+                            <?= in_array($codigo, $diasMarcados, true) ? 'checked' : '' ?>>
+                        <label for="dias_<?= e($codigo) ?>"><?= e($etiqueta) ?></label>
                     </p>
                 <?php endforeach; ?>
-                <?= fieldError($errors, 'days') ?>
             </fieldset>
 
             <p>
-                <input type="checkbox" name="privacy" id="privacy" value="1"
-                       <?= $privacy ? 'checked' : '' ?>>
-                <label for="privacy">Acepto el tratamiento de mis datos</label>
-                <?= fieldError($errors, 'privacy') ?>
+                <input type="checkbox" name="privacidad" id="privacidad" value="1"
+                    <?= $privacidad ? 'checked' : '' ?>>
+                <label for="privacidad">Acepto el tratamiento de mis datos</label>
             </p>
 
             <button type="submit">Registrarse</button>

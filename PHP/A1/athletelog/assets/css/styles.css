@@ -290,6 +290,44 @@ main:has(form) h1 {
 }
 
 /* =========================
+   MENSAJES DE ERROR Y ÉXITO
+========================= */
+
+.errores {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+    padding: 14px 14px 14px 36px;
+    background-color: #FDECEA;
+    border: 1px solid #D93025;
+    border-left: 6px solid #D93025;
+    border-radius: 6px;
+    color: #8A1C14;
+}
+
+.errores li {
+    margin-bottom: 4px;
+}
+
+.exito {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+    padding: 16px;
+    background-color: #E6F4EA;
+    border: 1px solid #1E8E3E;
+    border-left: 6px solid #1E8E3E;
+    border-radius: 6px;
+    color: #0D5C25;
+}
+
+.exito h1,
+.exito p {
+    color: inherit;
+    margin-bottom: 6px;
+}
+
+/* =========================
    DISEÑO RESPONSIVE
 ========================= */
 
